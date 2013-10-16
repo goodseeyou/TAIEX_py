@@ -11,20 +11,27 @@ class OptionInstance():
             with open(filepath) as data: #week, exercise price, call or put,trading day,trading time, open, high, low, trading price, volume
                 self.instances = []
                 for line in data:
+                    line = line.rstrip('\n').strip()
                     (sdate,eprice,action,date,time,openp,highp,lowp,tprice,volume) = str(line).split(sep=',', maxsplit=10)
-                    syear = sdate[0:3]
-                    smonth = sdate[4:5]
+                    '''
+                    substring (comprehension)
+                    |a|b|c|d|e|f|
+                    0 1 2 3 4 5 6
+                    abc = 0:3
+                    ''' 
+                    syear = sdate[0:4]
+                    smonth = sdate[4:6]
                     if len(sdate)<7:
                         sweek = 'W3'
                     else:
-                        sweek = sdate[6:7]
-                    tyear = date[0:3]
-                    tmonth = date[4:5]
-                    tday = date[6:7]
-                    thour = time[0:1]
-                    tminute = time[2:3]
-                    tsecond = time[4:5]
-                    self.instances.append({'settlementYear':syear
+                        sweek = sdate[6:8]
+                    tyear = date[0:4]
+                    tmonth = date[4:6]
+                    tday = date[6:8]
+                    thour = time[0:2]
+                    tminute = time[2:4]
+                    tsecond = time[4:6]
+                    self.instances.append({'settlementYear':str(syear)
                                            ,'settlementMonth':smonth
                                            ,'settlementWeek':sweek
                                            ,'tradingYear':tyear
@@ -35,10 +42,10 @@ class OptionInstance():
                                            ,'tradingSecond':tsecond
                                            ,'exercisePrice':eprice
                                            ,'action':action
-                                           ,'open':openp
-                                           ,'high':highp
-                                           ,'low':lowp
-                                           ,'tradingPrice':tprice
+                                           ,'open':float(openp)
+                                           ,'high':float(highp)
+                                           ,'low':float(lowp)
+                                           ,'tradingPrice':float(tprice)
                                            ,'volume':volume})
         except IOError as ioerror:
             print("error occurs: "+ioerror)
@@ -62,7 +69,7 @@ class OptionSettlement():
                     if len(name)<7:
                         week = 'W3'
                     else:
-                        week = name[6:7]
+                        week = name[6:8]
                     self.lst.append({'settlementYear':year,'settlementMonth':month,'settlementWeek':week,'settlementDay':day,'settlementPrice':price})
         except IOError as ioError:
             print("error occurs: "+str(ioError))
